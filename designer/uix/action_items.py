@@ -180,4 +180,5 @@ class DesignerActionButton(ActionItem, ButtonBehavior, FloatLayout):
         '''
         Event to hide the ContextualMenu when a ActionButton is pressed
         '''
-        self.cont_menu.dismiss()
+        if self.cont_menu:
+            self.cont_menu.dismiss()
