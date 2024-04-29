@@ -1671,7 +1671,8 @@ class DesignerException(ExceptionHandler):
             self.raised_exception = True
             Window.fullscreen = False
             BugReporterApp(traceback=traceback.format_exc()).run()
-            return ExceptionManager.PASS
+            raise  # actually let debugger see it (after window closes)
+            # return ExceptionManager.PASS
 
 
 class DesignerApp(App):
