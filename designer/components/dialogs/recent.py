@@ -1,11 +1,16 @@
 from designer.utils.utils import get_fs_encoding
-from kivy.adapters.listadapter import ListAdapter
 from kivy.properties import ObjectProperty, partial
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.listview import ListItemButton
+
+from kivy.uix.recycleboxlayout import RecycleBoxLayout
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+from kivy.uix.recyclegridlayout import RecycleGridLayout
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior
+from kivy.uix.button import Button
 
 
-class RecentItemButton(ListItemButton):
+class RecentItemButton(Button):
     pass
 
 
@@ -16,7 +21,7 @@ class RecentDialog(BoxLayout):
     '''
 
     listview = ObjectProperty(None)
-    ''':class:`~kivy.uix.listview.ListView` used for showing file paths.
+    ''':class:`~kivy.uix.recycleview.RecycleView` used for showing file paths.
        :data:`listview` is a :class:`~kivy.properties.ObjectProperty`
     '''
 
@@ -31,7 +36,7 @@ class RecentDialog(BoxLayout):
     '''
 
     adapter = ObjectProperty(None)
-    ''':class:`~kivy.uix.listview.ListAdapter` used for selecting files.
+    ''':class:`~kivy.uix.recycleboxlayout.RecycleBoxLayout` used for selecting files.
        :data:`adapter` is a :class:`~kivy.properties.ObjectProperty`
     '''
 
@@ -47,17 +52,18 @@ class RecentDialog(BoxLayout):
 
         self.list_items = RecentItemButton
 
-        self.adapter = ListAdapter(
+        self.adapter = RecycleBoxLayout(
                 cls=self.list_items,
                 data=self.item_strings,
                 selection_mode='single',
                 allow_empty_selection=False,
                 args_converter=self._args_converter)
 
-        self.listview.adapter = self.adapter
+        # self.listview.adapter = self.adapter
+        self.listview.add_widget(self.adapter)
 
     def _args_converter(self, index, path):
-        '''Convert the item to listview
+        '''Convert the item to RecycleView
         '''
         return {'text': path, 'size_hint_y': None, 'height': 40}
 

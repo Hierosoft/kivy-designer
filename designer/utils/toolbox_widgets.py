@@ -35,7 +35,7 @@ toolbox_widgets = [
     ('DropDown', 'complex'),
     ('FileChooserListView', 'complex', {}, {'size_hint': (None, None), 'size': ('200sp', '160sp')}),
     ('FileChooserIconView', 'complex', {}, {'size_hint': (None, None), 'size': ('200sp', '160sp')}),
-    ('ListView', 'complex', {'item_strings': ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']}, {'size_hint': (None, None), 'size': ('100sp', '140sp')}),
+    ('RecycleView', 'complex', {'item_strings': ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']}, {'size_hint': (None, None), 'size': ('100sp', '140sp')}),
     ('Popup', 'complex'),
     ('Spinner', 'complex', {'text': 'Spinner'}, {'size_hint': (None, None), 'size': ('150sp', '40sp')}),
     ('TabbedPanel', 'complex'),
@@ -45,4 +45,3 @@ toolbox_widgets = [
     ('Scatter', 'behavior'),
     ('StencilView', 'behavior'),
 ]
-

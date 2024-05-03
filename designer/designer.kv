@@ -33,7 +33,7 @@
 <DesignerLabelFit@DesignerLabel>:
     text_size: self.width - sp(32), None
 
-<DesignerListItemButton@ListItemButton>:
+<DesignerListItemButton@Button>:
     size_hint: 1, None
     size: self.texture_size[0] + sp(32), designer_height
     selected_color: 1, 1, 1, 1
@@ -278,7 +278,7 @@
             height: max(e_scroll.height, self.minimum_height)
             cols: 1
             id: menu
-            orientation: 'vertical'
+            orientation: 'tb-lr'
             padding: 5
             spacing: 5
             canvas.after:
@@ -911,7 +911,7 @@
         pos: root.pos
         cols: 1
         id: menu
-        orientation: 'vertical'
+        orientation: 'tb-lr'
         padding: 5
         canvas.after:
             Color:
@@ -1112,7 +1112,7 @@
         GridLayout:
             id: gridlayout
             cols: 1
-            orientation: 'vertical'
+            orientation: 'tb-lr'
             padding: '5sp'
             spacing: '3sp'
             size_hint_y: None

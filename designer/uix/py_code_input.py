@@ -85,8 +85,8 @@ class PyScrollView(ScrollView):
             src = code.text
             line = code.cursor_row + 1
             col = code.cursor_col
-            script = jedi.Script(src, line, col)
-            completions = script.completions()
+            script = jedi.Script(code=src)
+            completions = script.complete(line=line, column=col)
             self.show_completion(completions)
 
     def on_complete(self, instance, completion):

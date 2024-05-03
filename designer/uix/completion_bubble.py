@@ -1,11 +1,15 @@
-from kivy.adapters.listadapter import ListAdapter
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty, StringProperty
 from kivy.uix.bubble import Bubble
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.listview import ListItemButton, ListView
 
+from kivy.uix.recycleboxlayout import RecycleBoxLayout
+from kivy.uix.recycleview import RecycleView
+from kivy.uix.recycleview.views import RecycleDataViewBehavior
+from kivy.uix.recyclegridlayout import RecycleGridLayout
+from kivy.uix.recycleview.layout import LayoutSelectionBehavior
+from kivy.uix.button import Button
 
 Builder.load_string('''
 
@@ -42,7 +46,7 @@ Builder.load_string('''
 ''')
 
 
-class SuggestionItem(ListItemButton):
+class SuggestionItem(Button):
     complete = StringProperty('')
     '''Completion text
     '''
@@ -55,7 +59,7 @@ class SuggestionItem(ListItemButton):
             self.selected_by_touch(self)
 
 
-class CompletionListView(ListView):
+class CompletionRecycleView(RecycleView):
 
     scrolled = BooleanProperty(False)
     '''(internal) Identify if the user had scrolled the list with the mouse
@@ -63,18 +67,18 @@ class CompletionListView(ListView):
 
     def _scroll(self, scroll_y):
         self.scrolled = True
-        super(CompletionListView, self)._scroll(scroll_y)
+        super(CompletionRecycleView, self)._scroll(scroll_y)
 
 
 class CompletionBubble(Bubble):
 
     list_view = ObjectProperty(None, allownone=True)
-    '''(internal) Reference a ListView with a list of SuggestionItems
+    '''(internal) Reference a RecycleView with a list of SuggestionItems
        :data:`list_view` is a :class:`~kivy.properties.ObjectProperty`
     '''
 
     adapter = ObjectProperty(None)
-    '''(internal) Reference a ListView adapter
+    '''(internal) Reference a RecycleBoxLayout
        :data:`adapter` is a :class:`~kivy.properties.ObjectProperty`
     '''
 
@@ -91,9 +95,9 @@ class CompletionBubble(Bubble):
             self.dispatch('on_cancel')
 
     def _create_list_view(self, data):
-        '''Create the ListAdapter
+        '''Create the RecycleBoxLayout
         '''
-        self.adapter = ListAdapter(
+        self.adapter = RecycleBoxLayout(
             data=data,
             args_converter=self._args_converter,
             cls=SuggestionItem,
@@ -101,8 +105,9 @@ class CompletionBubble(Bubble):
             allow_empty_selection=False
         )
         self.adapter.bind(on_selection_change=self.on_selection_change)
-        self.list_view = CompletionListView(adapter=self.adapter)
+        self.list_view = CompletionRecycleView()
         self.add_widget(self.list_view)
+        self.list_view.add_widget(self.adapter)
 
     def _args_converter(self, index, completion):
         return {'text': completion.name,
@@ -114,7 +119,7 @@ class CompletionBubble(Bubble):
         self.dispatch('on_complete', item.complete)
 
     def show_completions(self, completions, force_scroll=False):
-        '''Update the Completion ListView with completions
+        '''Update the Completion RecycleView with completions
         '''
         if completions == []:
             fake_completion = type('obj', (object,),
@@ -268,8 +273,9 @@ if __name__ == '__main__':
         def show_bubble(self):
             source = '''
 datetime.da'''
-            script = jedi.Script(source, 3, len('datetime.da'))
-            completions = script.completions()
+            script = jedi.Script(code=source)
+            # line=3
+            completions = script.complete(line=2, column=len('datetime.da'))
             self.bubble.show_completions(completions * 10)
             self.add_widget(self.bubble)
 
