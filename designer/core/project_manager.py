@@ -495,8 +495,9 @@ class ProjectManager(EventDispatcher):
        :data:`current_project` is a :class:`~kivy.properties.ObjectProperty`
     '''
 
-    projects = DictProperty(None)
-    '''A map of opened projects
+    projects = DictProperty()
+    '''A map of opened projects.
+    Not (None) anymore, since checked as interable even if empty.
        :data:`projects` is a :class:`~kivy.properties.DictProperty`
     '''
 
