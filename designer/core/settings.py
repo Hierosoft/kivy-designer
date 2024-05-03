@@ -1,3 +1,4 @@
+import logging
 import os
 import os.path
 import shutil
@@ -11,6 +12,8 @@ from kivy.config import ConfigParser
 from kivy.properties import ObjectProperty
 from kivy.uix.settings import Settings
 from pygments import styles
+
+logger = logging.getLogger(__name__)
 
 
 # monkey backport! (https://github.com/kivy/kivy/pull/2288)
@@ -73,10 +76,24 @@ class DesignerSettings(Settings):
             self.interface.add_panel(panel, 'Kivy Designer Settings', uid)
 
         # loads available themes
+        missing_id_count = 0
+        count = 0
+        found_theme_options = False
         for child in panel.children:
+            count += 1
+            if not hasattr(child, 'id'):
+                missing_id_count += 1
+                continue
             if child.id == 'code_input_theme_options':
+                logger.debug("Getting styles for {}".format(child.id))
                 child.items = styles.get_all_styles()
-
+                found_theme_options = True
+        if missing_id_count:
+            logger.warning("{} of {} items in settings had no id."
+                           .format(missing_id_count, count))
+        if not found_theme_options:
+            logger.warning("DesignerSettings does not contain"
+                           " id: 'found_theme_options'")
         # tries to find python and buildozer path if it's not defined
         path = self.config_parser.getdefault(
             'global', 'python_shell_path', '')
