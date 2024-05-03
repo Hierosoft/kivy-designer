@@ -2,6 +2,12 @@ import functools
 import os
 import re
 from io import open
+if __name__ == "__main__":
+    import sys
+    _components = os.path.dirname(os.path.realpath(__file__))
+    _designer = os.path.dirname(_components)
+    _repo = os.path.dirname(_designer)
+    sys.path.insert(0, _repo)
 from designer.core.undo_manager import WidgetDragOperation, WidgetOperation
 from designer.uix.confirmation_dialog import ConfirmationDialogSave
 from designer.uix.settings import SettingListContent
@@ -1251,3 +1257,31 @@ class Playground(ScatterPlane):
             super(Playground, self).on_touch_down(touch)
 
         return False
+
+
+if __name__ == "__main__":
+    class WidgetTreeDummy:
+        def __init__(self):
+            self.dragging = False
+
+    class PlaygroundDemoApp(App):
+        def build(self):
+            playground = Playground()
+            playground.widgettree = WidgetTreeDummy()
+            Clock.schedule_once(self.show_test, .1)  # wait for auto sizing
+            return playground
+
+        def focus_widget(self, target):
+            pass
+
+        def show_test(self, _):
+            test_label = Factory.Label(
+                text="This is a demo\n(Playground is usually a subwidget)",
+                pos_hint={"center_x": .5},
+                pos=(self.root.size[0] / 3,
+                     self.root.size[1] * .75),
+            )
+            self.root.add_widget(test_label)
+
+    app = PlaygroundDemoApp()
+    app.run()
