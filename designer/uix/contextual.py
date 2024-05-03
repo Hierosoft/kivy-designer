@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -488,6 +491,11 @@ class ContextSubMenu(MenuButton):
         '''Clear _list_children[]
         '''
         for child, index in self._list_children:
+            if not self.container:
+                logger.warning(
+                    "container is None in ContextSubMenu remove_children"
+                )
+                break
             self.container.remove_widget(child)
         self._list_children = []
 
